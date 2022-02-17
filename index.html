@@ -104,11 +104,12 @@
             <!--showing subject details in shopping cart page once the user adds it in cart -->
             <div  v-for="lessons in cart" class="col-md-4 mb-5">
             <div class="card " style="width: 18rem;border-bottom-width: 5px; border-bottom-color:#bb01cc;">
-                <img height="200" v-bind:src="lessons.image">
+                <img height="200" v-bind:src="https://cw2-backend.herokuapp.com/${fetchLesson(lesson.lessonid).image}" alt= "lessons.image">
                 <div class="card-body">
-                <h5 class="card-title" >Title : {{lessons.title}}</h5>
-                <p class="card-text" > Location : {{lessons.location}} </p>
-                <p> <b>Price : ${{lessons.price}}</b></p>
+                <h5 class="card-title" >Title : {{fetchLesson(lessons.leesonid).title}}</h5>
+                <p class="card-text" > Location : {{fetchLesson(lessons.leesonid).location}} </p>
+                <p> <b>Price : ${{fetchLesson(lessons.leesonid).price}}</b></p>
+                <p> <b>Quantity: {{lesson.availablespace}}</b></p>
                 <button style="float: right;" href="#" class="btn btn-primary" v-on:click ='deleteFromCart(lessons, cart)' >Remove from Cart</button>
                 
                     <br>
@@ -191,9 +192,58 @@
                     return count;
                 },
  },
+ fetchLesson: function (_id) {
+                    const lessonIndex = this.lessons.findIndex(lesson => lesson._id === _id);
+                    if (lessonIndex == -1) {
+                        return;
+                    }
+                    return this.lessons[lessonIndex];
+                },
+
+                checkOut: function () {
+                    fetch('https://cw2-backend.herokuapp.com/collection/order', {
+                        method: 'POST', // set the HTTP method as 'POST'
+                        headers: {
+                            'Content-Type': 'application/json', // set the data type as JSON
+                        },
+                        body: JSON.stringify({ name: this.user.name, phone: this.user.phone, lessons: this.cart }), // need to stringify the JSON object
+                    })
+                        .then(response => response.json())
+                        .then(responseJSON => {
+                            console.log('Success:', responseJSON);
+                        });
+
+                    for (let index = 0; index < this.cart.length; index++) {
+                        const lesson = this.fetchLesson(this.cart[index].lessonid);
+                fetch('https://cw2-backend.herokuapp.com/collection/lesson/${lesson._id}',
+                {
+                            method: 'PUT', // set the HTTP method as 'POST'
+                            headers: {
+                                'Content-Type': 'application/json', // set the data type as JSON
+                            },
+                            body: JSON.stringify({ availablespace: lesson.availablespace }), // need to stringify the JSON object
+                        })
+                            .then(response => response.json())
+                            .then(responseJSON => {
+                                console.log('Success:', responseJSON);
+                            });
+                    }
+
+                    swal({
+                        title: "Check out successful",
+                        text: "Your order has been submitted",
+                        icon: "success",
+                    });
+
+                    this.showProduct = true;
+                    this.cart = [];
+
+
+                },
+        
 
             computed: {
-                    cartItemCount: function(lessons){
+                    cartItemCount: function(lessons){//returns lenthg of the cart
                         return this.cart.length || '';
                     },
                     //the comparison that shows the order
@@ -269,24 +319,8 @@
                             });
                     })
             
-            const newLesson = {title: 'new lesson', price: 49}
-                 // set the url to your server and route
-            fetch('https://cw2-backend.herokuapp.com/collection/lesson',
-                {
-                method: 'POST',
-                // set the HTTP method as 'POST'
-                headers: {
-                    'Content-Type': 'application/json', 
-                    // set the data type as JSON
-                },
-                body: JSON.stringify(newLesson), 
-                // need to stringify the JSON object
-            })
-            .then(response => response.json())
-            .then(responseJSON => {
-            console.log('Success:', responseJSON);
-            });
-             }         
+            
+             },        
             })
 
     </script>
