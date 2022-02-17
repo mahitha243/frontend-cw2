@@ -268,9 +268,26 @@
                                 vm.lesson = data;
                             });
                     })
-            }
-                            
-                        })
+            
+            const newLesson = {title: 'new lesson', price: 49}
+                 // set the url to your server and route
+            fetch('https://cw2-backend.herokuapp.com/collection/lesson',
+                {
+                method: 'POST',
+                // set the HTTP method as 'POST'
+                headers: {
+                    'Content-Type': 'application/json', 
+                    // set the data type as JSON
+                },
+                body: JSON.stringify(newLesson), 
+                // need to stringify the JSON object
+            })
+            .then(response => response.json())
+            .then(responseJSON => {
+            console.log('Success:', responseJSON);
+            });
+             }         
+            })
 
     </script>
 </body>
