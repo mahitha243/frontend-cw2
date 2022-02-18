@@ -1,359 +1,281 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!-- Start of Bootstrap CDN -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
-	<script src="https://kit.fontawesome.com/7080cd0a09.js" crossorigin="anonymous"></script>
-	<!-- script for vue -->
-	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-	<!-- script for lesson.js -->
-	<script src="lessons.js"></script>
-	<!-- css style -->
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<title>Vue Individual Course Work Two</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue week 8 Individual Coursework</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!--CSS-->
+    <link rel="stylesheet"  type="text/css" href="css/main.css">
+    <!--FONTAWESOME-->
+    <script src="https://kit.fontawesome.com/7080cd0a09.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/7080cd0a09.js" crossorigin="anonymous"></script>
+    <!---VUE-->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <!--LESSON DETAILS-->
+    <script src="lessons.js" ></script>
 </head>
 <body>
-	<div id="app">
-		<div class="jumbotron">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-2">
-						<h2 class="logo">Lesson</h2>
-					</div>
-					<div class="col-md-6">
-						<form>
-							<input type="text" class="form-control" v-model="term" v-on:keyup="searchLessons" placeholder="Search">
-						</form>
-					</div>
-					<div class="col-md-4">
-						<!-- Hides and shows the cart depending on whether or not it is empty -->
-						<button class="cart-btn btn btn-primary" v-if="cartItemCount === 0" hidden><i class="fa fa-shopping-cart"></i> Cart {{cartItemCount}}</button>
-						<button class="cart-btn btn btn-primary" v-on:click="showShoppingCartPage()" v-else><i class="fa fa-shopping-cart"></i> Cart {{cartItemCount}}</button>
-						<!-- End of Hides and shows the cart depending on whether or not it is empty -->
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- Start Breadcrumb -->
-		<nav aria-label="breadcrumb">
-		  <ol class="breadcrumb">
-		    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-		    <li class="breadcrumb-item active" aria-current="page">{{homepage}}</li>
-		  </ol>
-		</nav>
-		<!-- End of breadcrumb -->
-		<div class="mt-5">
-			<div v-if="showProduct">
-				<h2 class="text-center mt-5 mb-5"></h2>
-				<div class="container">
-					<div class="row">
-						<div class="col-md-2">
-						<aside>
-							<!-- Start of sort -->
-							<h6>Sort By</h6>
-							<div class="custom-control custom-radio">
-							  <input type="radio" id="subject" v-model="sort.sortingMethod" value="subject" name="" class="custom-control-input">
-							  <label class="custom-control-label" for="subject">Subject</label>
-							</div>
-							<div class="custom-control custom-radio">
-							  <input type="radio" id="location" v-model="sort.sortingMethod" value="location" name="" class="custom-control-input">
-							  <label class="custom-control-label" for="location">Location</label>
-							</div>
-							<div class="custom-control custom-radio mb-1">
-							  <input type="radio" id="price" v-model="sort.sortingMethod" value="price" name="" class="custom-control-input">
-							  <label class="custom-control-label" for="price">Price</label>
-							</div>
-							<div class="custom-control custom-radio mb-1">
-							  <input type="radio" id="availability" v-model="sort.sortingMethod" value="availability" name="" class="custom-control-input">
-							  <label class="custom-control-label" for="availability">Availability</label>
-							</div>
+    <!--website name on top the page by linking it to sitename-->
+    <div id="app" class="container" style="margin-top: 10%;">
+    <div class="container-fluid nav_view p-4">
+        <h3 class="text-center">
+            {{sitename}}
+        </h3>
+       </div>
+<a style="float: right;" href="#" class="btn btn-primary" v-if='cartItemCount === "" '  hidden>Cart</a>
+    <a style="float: right;" href="#" class="btn btn-primary" @click="showCheckout()" v-else > <span class="fas fa-cart-plus"></span> Cart ({{cartItemCount}})</a>
+    <!--search bar html-->
+    <div class="col-md-6">
+        <form>
+            <input class="search_form form-control"  type="text" v-model="term" v-on:keyup="searchLessons" placeholder="Search Courses" >
+           </form>
+      </div>
+      </header>
+    <div v-if='showProd'>
+   <br><br><br>
+   <!--Start of sort by and sort order-->
+<aside>
+  <h4>SortBy</h4>
+  <!--Title-->
+  <div class="custom-sort" display="inline-block" >
+  <input type="radio" id="title"  v-model="sort.sortingMethod" value="title" class="custom-sort-input">
+  <label   class="custom-sort-label" for="title" >Title</label><br>
+  </div>
+  <!--location-->
+  <div class="custom-sort" display="inline-block">
+  <input type="radio" id="location"  v-model="sort.sortingMethod" value="location" class="custom-sort-input">
+  <label class="custom-sort-label" for="location">Location</label><br>
+  </div>
+  <!--price-->
+  <div class="custom-sort" display="inline-block">
+  <input type="radio" id="price"  v-model="sort.sortingMethod" value="price" class="custom-sort-input">
+  <label class="custom-sort-label" for="price">Price</label><br>
+  </div>
+  <!--Available space-->
+  <div class="custom-sort" display="inline-block">
+  <input type="radio" id="availability"  v-model="sort.sortingMethod" value="availablespace" class="custom-sort-input">
+  <label class="custom-sort-label" for="price">Availability</label>
+  <br>  
+  </div>
+</aside>
+<aside1>
+  <h5>SortOrder</h5>
+  <div class="sort">
+  <input type="radio" id="ascending" name="sort_order" v-model="sort.sortingOrder" value="ascending">
+  <label class="sort-label" for="ascending">Ascending</label><br>
+  </div>
+  <div class="sort">
+  <input type="radio" id="descending" name="sort_order" v-model="sort.sortingOrder" value="descending">
+  <label class="sort-label" for="descending">Descending</label><br>  
+  </div>
+</aside1>
+<!--end of sort by  and sort order html-->
 
-							<!-- order by ascending or descedning order -->
-							<h6 class="mt-4">Order By</h6>
-							<div class="custom-control custom-radio mb-1">
-							  <input type="radio" id="ascending" v-model="sort.sortingOrder" value="ascending" name="" class="custom-control-input">
-							  <label class="custom-control-label" for="ascending">Ascending</label>
-							</div>
-							<div class="custom-control custom-radio mb-1">
-							  <input type="radio" id="descending" v-model="sort.sortingOrder" value="descending" name="" class="custom-control-input">
-							  <label class="custom-control-label" for="descending">Descending</label>
-							</div>
-							<!-- end of order by ascending or descending order -->
-							<!-- End of sort -->
-						</aside>
-						</div>
-						<!-- UI to display lesson items -->
-						<div class="col-md-10 row">
-							<div v-for="lesson in sortedLessons" class="col-md-4">
-							<div class="card mb-4">
-								<img class="card-img" v-bind:src="`https://cw2-backend.herokuapp.com/${lesson.image}`" alt="Lesson Image">
-								<div class="card-body">
-									<h6>Subject: {{lesson.subject}}</h6>
-									<h6>Location: {{lesson.location}}</h6>
-									<h6>Available: {{lesson.availablespace - cartCount(lesson)}}</h6>
-									<h6>Price: £{{lesson.price}}</h6>
-									<h6>Rating: 
-										<span v-for="n in lesson.rating">★</span>
-                    					<span v-for="n in 5 - lesson.rating">☆</span>
-									</h6>
-									<button v-on:click="addLessonToCart(lesson._id)" v-if="canAddToCart(lesson)" class="btn btn-primary">Add to Cart</button>
-									<!-- disable cart -->
-									<button class="btn btn-primary" v-else="lesson.availablespace === cartCount(lesson.id)" v-bind:disabled="!canAddToCart(lesson)">Add to Cart</button>
-									<!-- End of disable cart -->
-								</div>
-							</div>
-						</div>
-						</div>
-						<!-- end of UI to display lesson items -->
-					</div>
-				</div>
-			</div>
+<!--subject display vue -->
+        <div class="row" >
+            <div  v-for="lessons in sortedLessons" class="col-md-6 col-lg-4 mb-5">
+            <div class="card " style="width: 18rem;border-bottom-width: 5px; border-bottom-color:purple;">
+                <img height="200" v-bind:src="lessons.image">
+                <div class="card-body">
+                <h5 class="card-title" >Title : {{lessons.title}}</h5>
+                <p class="card-text" > Location : {{lessons.location}} </p>
+                <p> <b>Price : ${{lessons.price}}</b></p>
+                <p class="text-danger" v-if="lessons.availablespace === cartCount(lessons) "> Completely Booked</p>
+                <p class="text-success" v-else>Available Spaces : {{lessons.availablespace - cartCount(lessons)}}</p>
+                <button style="float: right;" href="#" class="btn btn-primary" v-on:click ='addToCart(lessons)' v-if='canAddToCart(lessons)' >Add To Cart</button>
+                <button hidden style="float: right;" href="#" class="btn btn-primary" v-else >Add To Cart</button>
+                    <br>
+                </div>
+            </div>
+        </div>
 
+    </div>
+</div>
+<!--cart page-->
+ <div v-else>
+       <a style="float: left;" href="#" class="btn btn-primary" @click="showCheckout()"  > < Back </a> 
+        <h1 class="text-center" v-text="sitename2" style="margin-bottom: 5%;"></h1>
+        
+    
+    <br><br><br>
 
-			<div v-else>
-				<!-- UI to show items added to cart -->
-				<h2 class="text-center mt-5 mb-5">{{cartpage}}</h2>
-				<div class="container">
-					<div class="row">
-						<div v-for="(lesson, index) in cart" class="col-md-3 mb-4">
-							<div class="card">
-								<img class="card-img" v-bind:src="`https://cw2-backend.herokuapp.com//${fetchLesson(lesson.lessonID).image}`" alt="Lesson Image">
-								<div class="card-body">
-									<h6>Subject: {{fetchLesson(lesson.lessonID).subject}}</h6>
-									<h6>Location: {{fetchLesson(lesson.lessonID).location}}</h6>
-									<h6>Price: £{{fetchLesson(lesson.lessonID).price}}</h6>
-									<h6>Quantity: {{lesson.availablespace}}</h6>
-									<button v-on:click="removeFromCart(index)" class="btn btn-primary">Remove from Cart</button>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- Start of checkout UI -->
-					<h2 class="text-center mt-5 mb-5">Checkout</h2>
-					<div class="mb-5">
-					  <div class="form-row">
-					    <div class="col">
-					      <input type="text" class="form-control" v-model="user.name" placeholder="Enter Name" required>
-					    </div>
-					    <div class="col">
-					      <input type="text" class="form-control" v-model="user.phone" placeholder="Phone Number" required>
-					    </div>
-					    <input style="margin-bottom: 50px;" v-on:click="checkOut()" v-if="user.name == '' || user.number == '' " class="btn btn-primary" type="submit" value="Place Order" hidden>
-					    <p v-else-if="user.name == parseInt(user.name) " class="bg-danger"> Please input a valid name</p>
-					    <input style="margin-bottom: 50px;" v-on:click="checkOut()" v-else class="btn btn-primary" type="submit" value="Place Order"> 
-					  </div>
-					</div>
-					<!-- End of checkout UI -->
-				</div>
-				<!-- End of UI to show items added to cart -->
-			</div>
-
-		</div>
-	</div>
-
-<script>
-	// Vue Object
-	var vm = new Vue ({
-		el: "#app",
-        data:{
-        	homepage: 'Browse Lessons',
-        	cartpage: 'Shopping Cart',
-        	showProduct: true,
-        	term: '',
-        	user:{
-        		name: '',
-        		phone: '',
-        	},
-        	lessons: [],
-        	cart: [],
-        	sort: {
-                sortingMethod: "location",
-                sortingOrder: "ascending",
+        <div class="row" >
+            <!--showing subject details in shopping cart page once the user adds it in cart -->
+            <div  v-for="lessons in cart" class="col-md-4 mb-5">
+            <div class="card " style="width: 18rem;border-bottom-width: 5px; border-bottom-color:purple;">
+                <img height="200" v-bind:src= "lessons.image">
+                <div class="card-body">
+                <h5 class="card-title" >Title : {{lessons.title}}</h5>
+                <p class="card-text" > Location : {{lessons.location}} </p>
+                <p> <b>Price : ${{lessons.price}}</b></p>
+               
+                <button style="float: right;" href="#" class="btn btn-primary" v-on:click ='deleteFromCart(lessons, cart)' >Remove from Cart</button>
+                
+                    <br>
+                <div>
+                    
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+        <!--checkout form in shopping cart page-->
+        <h2>Checkout</h2>
+        <br>
+        <form>
+            <input class="form-control" style="width: 60%;" type="text" v-model="user.name" placeholder="Enter Your Name" required ><br>
+            <input class="form-control" style="width: 60%;" type="number" v-model="user.number" placeholder="Enter Your Phone Number" required><br>
+            <input style="margin-bottom: 50px;" @click="submitForm(user)" v-if="user.name == '' || user.number == '' " class="btn btn-primary" type="submit" value="Place Order" hidden>
+            <p v-else-if="user.name == parseInt(user.name) " class="bg-danger"> Please input a valid name</p>
+            <input style="margin-bottom: 50px;" @click="submitForm(user)" v-else class="btn btn-primary" type="submit" value="Place Order"> 
+        </form>
+          </div>
+</div>
+<!--Javascript Vue-->
+      <script>
+        var vm = new Vue ({
+            el: "#app",
+            data:{
+                showProd: true,
+                sitename: 'LESSONS BOOKING',
+                sitename2: 'Shopping Cart',
+                term:'',
+                sort: {
+                    sortingMethod: "price",
+                    sortingOrder: "ascending",
+                },
+                user:{
+                       name: '',
+                       number: '',
             },
-        },
-        methods: {
-            // Adds Product to cart
-			addLessonToCart: function (_id) {
-				console.log("inside");
-                    const lessonIndex = this.lessons.findIndex(lesson => lesson._id === _id);
-                    if (lessonIndex != -1) {
-                        this.lessons[lessonIndex].availablespace -= 1;
-                        this.addToCart(_id);
-                    }
+            lesson: [],
+             cart: [],
+            },
+              methods:{
+                  //adding subjects to shopping cart
+                 addToCart: function(lessons) {
+                 this.cart.push(lessons);
                 },
-				addToCart: function (lessonID) {
-                    const itemIndex = this.cart.findIndex(item => item.lessonID === lessonID);
-                    if (itemIndex != -1) {
-                        this.cart[itemIndex].availablespace += 1;
-                    } else {
-                        this.cart.push({ lessonID: lessonID, availablespace: 1 });
-                    }
-                },
-                           // Removes an item from the cart
-						   removeFromCart: function (index) {
-                    this.cart[index].availablespace = this.cart[index].availablespace - 1;
-                    const lessonIndex = this.lessons.findIndex(lesson => lesson._id === this.cart[index].lessonID);
-                    if (lessonIndex != -1) {
-                        this.lessons[lessonIndex].availablespace += 1;
-                    }
-                    if (this.cart[index].availablespace == 0) {
-                        this.cart.splice(index, 1);
-                    }
 
-                    console.log(this.cart);
+            // Filtering through lessons object to give out search
+             searchLessons: function(){
+            this.lesson = lessonsArray;
+            this.lesson = this.lesson.filter(data => data.title.toLowerCase().includes(this.term) == true || data.location.toLowerCase().includes(this.term));
+             },
+                //delete subject from shopping cart
+                deleteFromCart: function(lessons, cart) {
+                   this.cart.splice(this.cart.indexOf(lessons), 1);
+                },
+                //shopping cart 
+                showCheckout: function(){
+                    console.log(this.showProd);
+                    this.showProd = this.showProd ? false : true;
+                },
+                //once user has ordered the subjects and checked out
+                submitForm(user) {
+                    alert('Hooray '+ user.name + ' ,your order has been successfully submitted');
+                
+                },
+                // to check amount of subject in cart
+                canAddToCart: function(lessons){
+                    return lessons.availablespace > this.cartCount(lessons);
+                },
 
-                },
-           // Checks the amount of each product in the cart
-		   canAddToCart(lesson) {
-                    return lesson.availablespace > this.cartCount(lesson);
-                },
-            // Returns the number of a product type in the cart
-			cartCount(id) {
+                cartCount(id) {
                     let count = 0;
-                    for (let i = 0; i < this.cart.length; i++) {
-                        if (this.cart[i] === id) {
-                            count++;
+                    for(let i = 0; i < this.cart.length; i++) {
+                    if (this.cart[i] === id) {
+                    count++;
                         }
                     }
                     return count;
                 },
-				fetchLesson: function (_id) {
-                    const lessonIndex = this.lessons.findIndex(lesson => lesson._id === _id);
-                    if (lessonIndex == -1) {
-                        return;
-                    }
-                    return this.lessons[lessonIndex];
-                },
-            // Display shopping cart page
-			showShoppingCartPage: function () {
-                    this.showProduct = this.showProduct ? false : true;
-                },
-            // Search For lessons
-            searchLessons: function(){
-            	this.lessons = lessons;
-	            this.lessons = this.lessons.filter(lesson => lesson.subject.toLowerCase().includes(this.term) == true || lesson.location.toLowerCase().includes(this.term));
-            },
-            checkOut: function () {
-                    fetch('https://cw2-backend.herokuapp.com//collection/order', {
-                        method: 'POST', // set the HTTP method as 'POST'
-                        headers: {
-                            'Content-Type': 'application/json', // set the data type as JSON
-                        },
-                        body: JSON.stringify({ name: this.user.name, phone: this.user.phone, lessons: this.cart }), // need to stringify the JSON object
-                    })
-                        .then(response => response.json())
-                        .then(responseJSON => {
-                            console.log('Success:', responseJSON);
-                        });
+ },
+ 
+                
 
-                    for (let index = 0; index < this.cart.length; index++) {
-                        const lesson = this.fetchLesson(this.cart[index].lessonID);
-                        fetch(`https://cw2-backend.herokuapp.com//collection/lesson/${lesson._id}`, {
-                            method: 'PUT', // set the HTTP method as 'POST'
-                            headers: {
-                                'Content-Type': 'application/json', // set the data type as JSON
-                            },
-                            body: JSON.stringify({ availablespace: lesson.availablespace }), // need to stringify the JSON object
-                        })
-                            .then(response => response.json())
-                            .then(responseJSON => {
-                                console.log('Success:', responseJSON);
-                            });
-                    }
-
-                    swal({
-                        title: "Check out successful",
-                        text: "Your order has been submitted",
-                        icon: "success",
-                    });
-
-                    this.showProduct = true;
-                    this.cart = [];
-
-
-                }
-        },
         computed: {
-        	//returns length of the cart items
-                cartItemCount: function() {
-                    return this.cart.length || "";
-                },
-                sortedLessons(lessons, sort){
-                    //the comparison that defines the order
-
+                    cartItemCount: function(lessons){//returns lenthg of the cart
+                        return this.cart.length || '';
+                    },
+                    //the comparison that shows the order
+                    sortedLessons(lessons, sort){
+                    
+                    //comparing two field of location through  ascending and descending order
                     if(this.sort.sortingMethod == "location" && this.sort.sortingOrder === "ascending" ){
-                    function compare (a, b){
+                    function compare (a, b){ //a function which takes two fields and compare it
                         if (a.location > b.location) return 1;
                         if (a.location < b.location) return -1;
                         return 0;
                     }
                     
-	                }else if(this.sort.sortingMethod == "location" && this.sort.sortingOrder === "descending" ){
-	                    function compare (a, b){
-	                        if (a.location < b.location) return 1;
-	                        if (a.location > b.location) return -1;
-	                        return 0;
-	                    }
-	                }else if(this.sort.sortingMethod === "price" && this.sort.sortingOrder === "ascending" ){
-	                    function compare (a, b){
-	                        if (a.price > b.price) return 1;
-	                        if (a.price < b.price) return -1;
-	                        return 0;
-	                    }
-	                }else if(this.sort.sortingMethod === "price" && this.sort.sortingOrder === "descending" ){
-	                    function compare (a, b){
-	                        if (a.price < b.price) return 1;
-	                        if (a.price > b.price) return -1;
-	                        return 0;
-	                    }
-	                }else if(this.sort.sortingMethod == "subject" && this.sort.sortingOrder === "ascending" ){
-	                    function compare (a, b){
-	                        if (a.subject > b.subject) return 1;
-	                        if (a.subject < b.subject) return -1;
-	                        return 0;
-	                    }
-	                }else if(this.sort.sortingMethod == "subject" && this.sort.sortingOrder === "descending" ){
-	                    function compare (a, b){
-	                        if (a.subject < b.subject) return 1;
-	                        if (a.subject > b.subject) return -1;
-	                        return 0;
-	                    }
-	                }else if(this.sort.sortingMethod == "availablespace" && this.sort.sortingOrder === "ascending" ){
-	                    function compare (a, b){
-	                        if (a.availablespace > b.availablespace) return 1;
-	                        if (a.availablespace < b.availablespace) return -1;
-	                        return 0;
-	                    }
-	                }else if(this.sort.sortingMethod == "availablespace" && this.sort.sortingOrder === "descending" ){
-	                    function compare (a, b){
-	                        if (a.availablespace < b.availablespace) return 1;
-	                        if (a.availablespace > b.availablespace) return -1;
-	                        return 0;
-	                    }
-	                }
-	                    //sort 'productArray' array and return it
-	                    return this.lessons.sort(compare);
+                }else if(this.sort.sortingMethod == "location" && this.sort.sortingOrder === "descending" ){
+                    function compare (a, b){
+                        if (a.location < b.location) return 1;
+                        if (a.location > b.location) return -1;
+                        return 0;
+                    }
+                    //sorting through price by ascending and descending order
+                }else if(this.sort.sortingMethod === "price" && this.sort.sortingOrder === "ascending" ){
+                    function compare (a, b){
+                        if (a.price > b.price) return 1;
+                        if (a.price < b.price) return -1;
+                        return 0;
+                    }
+                }else if(this.sort.sortingMethod === "price" && this.sort.sortingOrder === "descending" ){
+                    function compare (a, b){
+                        if (a.price < b.price) return 1;
+                        if (a.price > b.price) return -1;
+                        return 0;
+                    }
+                //sorting through title by ascending and descending order
+                }else if(this.sort.sortingMethod == "title" && this.sort.sortingOrder === "ascending" ){
+                    function compare (a, b){
+                        if (a.title > b.title) return 1;
+                        if (a.title < b.title) return -1;
+                        return 0;
+                    }
+                }else if(this.sort.sortingMethod == "title" && this.sort.sortingOrder === "descending" ){
+                    function compare (a, b){
+                        if (a.title < b.title) return 1;
+                        if (a.title > b.title) return -1;
+                        return 0;
+                    }
+                //sorting through Availability by ascending and descending order
+                }else if(this.sort.sortingMethod == "availablespace" && this.sort.sortingOrder === "ascending" ){
+                    function compare (a, b){
+                        if (a.availablespace > b.availablespace) return 1;
+                        if (a.availablespace < b.availablespace) return -1;
+                        return 0;
+                    }
+                }else if(this.sort.sortingMethod == "availablespace" && this.sort.sortingOrder === "descending" ){
+                    function compare (a, b){
+                        if (a.availablespace < b.availablespace) return 1;
+                        if (a.availablespace > b.availablespace) return -1;
+                        return 0;
+                    }
+                }
+                    //sort 'lessonArray' array and return it
+                    return this.lesson.sort(compare);
+
                 },
-        },
-		created: function () {
+             },
+             created: function () {
                 //FETCH TO GET ALL LESSONS
-                fetch("https://cw2-backend.herokuapp.com//collection/lesson").then(
+                fetch("https://cw2-backend.herokuapp.com/collection/lesson").then(
                     function (response) {
                         response.json().then(
                             function (data) {
                                 console.log(data);
-                                vm.lessons = data;
+                                vm.lesson = data;
                             });
                     })
-            }
-	})
-</script>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
-<!-- Sweet alert file -->
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+            
+            
+             },        
+            })
 
+    </script>
 </body>
 </html>
