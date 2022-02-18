@@ -147,7 +147,7 @@
                 },
                 user:{
                        name: '',
-                       number: '',
+                     phone: '',
             },
             lesson: [],
              cart: [],
@@ -273,8 +273,25 @@
                     })
             
             
-             },        
-            })
+                  
+             
+             let store = new Vue({
+data: { lessons: {} },
+// this function runs when creating the Vue instance
+created: function() {
+// replace the URL to your Heroku app and route
+fetch('https://cw2-backend.herokuapp.com/collection/lesson').then(
+function (response) {
+response.json().then(
+function (json) {
+// note that we used 'store.product' instead of 'this.product'
+store.products = json;
+});
+})
+},
+})
+},
+        })
 
     </script>
 </body>
