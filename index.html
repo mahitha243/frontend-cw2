@@ -88,7 +88,7 @@
 						<div class="col-md-10 row">
 							<div v-for="lesson in sortedLessons" class="col-md-4">
 							<div class="card mb-4">
-								<img class="card-img" v-bind:src="`https://cwtwo-web.herokuapp.com/${lesson.image}`" alt="Lesson Image">
+								<img class="card-img" v-bind:src="`https://cw2-backend.herokuapp.com/${lesson.image}`" alt="Lesson Image">
 								<div class="card-body">
 									<h6>Subject: {{lesson.subject}}</h6>
 									<h6>Location: {{lesson.location}}</h6>
@@ -119,7 +119,7 @@
 					<div class="row">
 						<div v-for="(lesson, index) in cart" class="col-md-3 mb-4">
 							<div class="card">
-								<img class="card-img" v-bind:src="`https://cwtwo-web.herokuapp.com/${fetchLesson(lesson.lessonID).image}`" alt="Lesson Image">
+								<img class="card-img" v-bind:src="`https://cw2-backend.herokuapp.com//${fetchLesson(lesson.lessonID).image}`" alt="Lesson Image">
 								<div class="card-body">
 									<h6>Subject: {{fetchLesson(lesson.lessonID).subject}}</h6>
 									<h6>Location: {{fetchLesson(lesson.lessonID).location}}</h6>
@@ -236,7 +236,7 @@
 	            this.lessons = this.lessons.filter(lesson => lesson.subject.toLowerCase().includes(this.term) == true || lesson.location.toLowerCase().includes(this.term));
             },
             checkOut: function () {
-                    fetch('https://cwtwo-web.herokuapp.com/collection/order', {
+                    fetch('https://cw2-backend.herokuapp.com//collection/order', {
                         method: 'POST', // set the HTTP method as 'POST'
                         headers: {
                             'Content-Type': 'application/json', // set the data type as JSON
@@ -250,7 +250,7 @@
 
                     for (let index = 0; index < this.cart.length; index++) {
                         const lesson = this.fetchLesson(this.cart[index].lessonID);
-                        fetch(`https://cwtwo-web.herokuapp.com/collection/lesson/${lesson._id}`, {
+                        fetch(`https://cw2-backend.herokuapp.com//collection/lesson/${lesson._id}`, {
                             method: 'PUT', // set the HTTP method as 'POST'
                             headers: {
                                 'Content-Type': 'application/json', // set the data type as JSON
@@ -339,7 +339,7 @@
         },
 		created: function () {
                 //FETCH TO GET ALL LESSONS
-                fetch("https://cwtwo-web.herokuapp.com/collection/lesson").then(
+                fetch("https://cw2-backend.herokuapp.com//collection/lesson").then(
                     function (response) {
                         response.json().then(
                             function (data) {
