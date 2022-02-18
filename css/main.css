@@ -1,38 +1,38 @@
 .logo{
-	color: #FC641D;
+	color: purple;
 	font-family: cursive;
 	font-weight: bold;
 }
 a{
-	color: #FC641D;
+	color: purple;
 }
 a:hover{
-	color: #FC641D;
+	color: purple;
 	text-decoration: none;
 }
 #star{
-	color: orange;
+	color: purple;
 }
 .custom-control-input:checked~.custom-control-label::before{
-	background-color: #FC641D;
-	border-color: #FC641D;
+	background-color: purple;
+	border-color: purple;
 }
 .btn-primary{
-	background-color: #FC641D;
-	border-color: #FC641D;
+	background-color: purple;
+	border-color: purple;
 }
 .btn-primary:hover{
-	background-color: #DF4903;
-	border-color: #DF4903;
+	background-color: purple;
+	border-color:purple;
 	outline: none;
 }
 .btn-primary:disabled{
-	background-color: #DF4903;
-	border-color: #DF4903;
+	background-color: pink;
+	border-color: pink;
 }
 .btn-primary:focus{
-	background-color: #DF4903;
-	border-color: #DF4903;
+	background-color: pink;
+	border-color:pink;
 	outline: none;
 }
 .btn-primary:active{
