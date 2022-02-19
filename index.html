@@ -12,8 +12,7 @@
     <script src="https://kit.fontawesome.com/7080cd0a09.js" crossorigin="anonymous"></script>
     <!---VUE-->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
-    <!--LESSON DETAILS-->
-    <script src="lessons.js" ></script>
+
 </head>
 <body>
     <!--website name on top the page by linking it to sitename-->
@@ -23,7 +22,7 @@
             {{sitename}}
         </h3>
        </div>
-<a style="float: right;" href="#" class="btn btn-primary" v-if='cartItemCount === "" '  hidden>Cart</a>
+<a style="float: right;" href="#" class="btn btn-primary" v-if='cartItemCount === 0 '  hidden>Cart</a>
     <a style="float: right;" href="#" class="btn btn-primary" @click="showCheckout()" v-else > <span class="fas fa-cart-plus"></span> Cart ({{cartItemCount}})</a>
     <!--search bar html-->
     <div class="col-md-6">
@@ -74,16 +73,16 @@
 
 <!--subject display vue -->
         <div class="row" >
-            <div  v-for="lessons in sortedLessons" class="col-md-6 col-lg-4 mb-5">
+            <div  v-for="lesson in sortedLessons" class="col-md-6 col-lg-4 mb-5">
             <div class="card " style="width: 18rem;border-bottom-width: 5px; border-bottom-color:purple;">
-                <img height="200" v-bind:src="lessons.image">
+                <img class="card-img" v-bind:src="`https://cw2-backend.herokuapp.com/${lesson.image}`" alt="Lesson Image">
                 <div class="card-body">
-                <h5 class="card-title" >Title : {{lessons.title}}</h5>
-                <p class="card-text" > Location : {{lessons.location}} </p>
-                <p> <b>Price : ${{lessons.price}}</b></p>
+                <h5 class="card-title" >Title : {{lesson.title}}</h5>
+                <p class="card-text" > Location : {{lesson.location}} </p>
+                <p> <b>Price : ${{lesson.price}}</b></p>
                 <p class="text-danger" v-if="lessons.availablespace === cartCount(lessons) "> Completely Booked</p>
-                <p class="text-success" v-else>Available Spaces : {{lessons.availablespace - cartCount(lessons)}}</p>
-                <button style="float: right;" href="#" class="btn btn-primary" v-on:click ='addToCart(lessons)' v-if='canAddToCart(lessons)' >Add To Cart</button>
+                <p class="text-success" v-else>Available Spaces : {{lesson.availablespace - cartCount(lesson)}}</p>
+                <button style="float: right;" href="#" class="btn btn-primary" v-on:click ='addLessonsToCart(lesson._id)' v-if='canAddToCart(lesson)' >Add To Cart</button>
                 <button hidden style="float: right;" href="#" class="btn btn-primary" v-else >Add To Cart</button>
                     <br>
                 </div>
@@ -102,15 +101,15 @@
 
         <div class="row" >
             <!--showing subject details in shopping cart page once the user adds it in cart -->
-            <div  v-for="lessons in cart" class="col-md-4 mb-5">
+            <div  v-for="(lesson, index) in cart" class="col-md-4 mb-5">
             <div class="card " style="width: 18rem;border-bottom-width: 5px; border-bottom-color:purple;">
-                <img height="200" v-bind:src= "lessons.image">
+                <img class="card-img" v-bind:src="`https://cw2-backend.herokuapp.com/collection/lesson/${fetchLesson(lesson._id).image}`" alt="Lesson Image">
                 <div class="card-body">
-                <h5 class="card-title" >Title : {{lessons.title}}</h5>
-                <p class="card-text" > Location : {{lessons.location}} </p>
-                <p> <b>Price : ${{lessons.price}}</b></p>
+                <h5 class="card-title" >Title : {{fetchLesson(lesson._id).title}}</h5>
+                <p class="card-text" > Location : {{fetchLesson(lesson._id).location}} </p>
+                <p> <b>Price : ${{fetchLesson(lesson._id).price}}}</b></p>
                
-                <button style="float: right;" href="#" class="btn btn-primary" v-on:click ='deleteFromCart(lessons, cart)' >Remove from Cart</button>
+                <button style="float: right;" href="#" class="btn btn-primary" v-on:click ='deleteFromCart(index)' >Remove from Cart</button>
                 
                     <br>
                 <div>
@@ -126,9 +125,9 @@
         <form>
             <input class="form-control" style="width: 60%;" type="text" v-model="user.name" placeholder="Enter Your Name" required ><br>
             <input class="form-control" style="width: 60%;" type="number" v-model="user.number" placeholder="Enter Your Phone Number" required><br>
-            <input style="margin-bottom: 50px;" @click="submitForm(user)" v-if="user.name == '' || user.number == '' " class="btn btn-primary" type="submit" value="Place Order" hidden>
+            <input style="margin-bottom: 50px;" @click="submitForm()" v-if="user.name == '' || user.number == '' " class="btn btn-primary" type="submit" value="Place Order" hidden>
             <p v-else-if="user.name == parseInt(user.name) " class="bg-danger"> Please input a valid name</p>
-            <input style="margin-bottom: 50px;" @click="submitForm(user)" v-else class="btn btn-primary" type="submit" value="Place Order"> 
+            <input style="margin-bottom: 50px;" @click="submitForm()" v-else class="btn btn-primary" type="submit" value="Place Order"> 
         </form>
           </div>
 </div>
@@ -146,26 +145,67 @@
                     sortingOrder: "ascending",
                 },
                 user:{
-                       name: '',
-                     phone: '',
+                    name: '',
+                    phone: '',
             },
-            lesson: [],
+            lessons: [],
              cart: [],
             },
               methods:{
                   //adding subjects to shopping cart
-                 addToCart: function(lessons) {
-                 this.cart.push(lessons);
+           // Adds Product to cart
+           addLessonsToCart: function (_id) {
+                    const lessonIndex = this.lessons.findIndex(lesson => lesson._id === _id);
+                    if (lessonIndex != -1) {
+                        this.lessons[lessonIndex].availablespace -= 1;
+                        this.addToCart(_id);
+                    }
+                },
+           addToCart: function (id) {
+                    const itemIndex = this.cart.findIndex(item => item._id === id);
+                    if (itemIndex != -1) {
+                        this.cart[itemIndex].availablespace += 1;
+                    } else {
+                        this.cart.push({ id: id, availablespace: 1 });
+                    }
+                },
+
+                //shopping cart 
+                showCheckout: function(){
+                    console.log(this.showProd);
+                    this.showProd = this.showProd ? false : true;
                 },
 
             // Filtering through lessons object to give out search
              searchLessons: function(){
-            this.lesson = lessonsArray;
-            this.lesson = this.lesson.filter(data => data.title.toLowerCase().includes(this.term) == true || data.location.toLowerCase().includes(this.term));
+                fetch("https://cw2-backend.herokuapp.com/collection/lesson/" + this.term).then(
+                        function (response) {
+                            response.json().then(
+                                function (data) {
+                                    vm.lessons = data;
+                                    console.log(vm.lessons);
+                                });
+                        })
              },
                 //delete subject from shopping cart
-                deleteFromCart: function(lessons, cart) {
-                   this.cart.splice(this.cart.indexOf(lessons), 1);
+                deleteFromCart: function(index) {
+                    this.cart[index].availablespace = this.cart[index].availablespace - 1;
+                    const lessonIndex = this.lessons.findIndex(lesson => lesson._id === this.cart[index].lessonID);
+                    if (lessonIndex != -1) {
+                        this.lessons[lessonIndex].availablespace += 1;
+                    }
+                    if (this.cart[index].availablespace == 0) {
+                        this.cart.splice(index, 1);
+                    }
+
+                    console.log(this.cart);
+                },
+                fetchLesson: function (_id) {
+                    const lessonIndex = this.lessons.findIndex(lesson => lesson._id === _id);
+                    if (lessonIndex == -1) {
+                        return;
+                    }
+                    return this.lessons[lessonIndex];
                 },
                 //shopping cart 
                 showCheckout: function(){
@@ -173,7 +213,42 @@
                     this.showProd = this.showProd ? false : true;
                 },
                 //once user has ordered the subjects and checked out
-                submitForm(user) {
+                submitForm() {
+                    fetch('https://cw2-backend.herokuapp.com/collection/order', {
+                        method: 'POST', // set the HTTP method as 'POST'
+                        headers: {
+                            'Content-Type': 'application/json', // set the data type as JSON
+                        },
+                        body: JSON.stringify({ name: this.user.name, phone: this.user.phone, lessons: this.cart }), // need to stringify the JSON object
+                    })
+                        .then(response => response.json())
+                        .then(responseJSON => {
+                            console.log('Success:', responseJSON);
+                        });
+
+                    for (let index = 0; index < this.cart.length; index++) {
+                        const lesson = this.fetchLesson(this.cart[index]._id);
+                        fetch(`https://cw2-backend.herokuapp.com/collection/lesson/${lesson._id}`, {
+                            method: 'PUT', // set the HTTP method as 'POST'
+                            headers: {
+                                'Content-Type': 'application/json', // set the data type as JSON
+                            },
+                            body: JSON.stringify({ availablespace: lesson.availablespace }), // need to stringify the JSON object
+                        })
+                            .then(response => response.json())
+                            .then(responseJSON => {
+                                console.log('Success:', responseJSON);
+                            });
+                    }
+
+                    swal({
+                        title: "Check out successful",
+                        text: "Your order has been submitted",
+                        icon: "success",
+                    });
+
+                    this.showProduct = true;
+                    this.cart = [];
                     alert('Hooray '+ user.name + ' ,your order has been successfully submitted');
                 
                 },
@@ -186,8 +261,8 @@
                     let count = 0;
                     for(let i = 0; i < this.cart.length; i++) {
                     if (this.cart[i] === id) {
-                    count++;
-                        }
+                         count++;
+                    }
                     }
                     return count;
                 },
@@ -257,7 +332,7 @@
                     }
                 }
                     //sort 'lessonArray' array and return it
-                    return this.lesson.sort(compare);
+                    return this.lessons.sort(compare);
 
                 },
              },
@@ -268,28 +343,9 @@
                         response.json().then(
                             function (data) {
                                 console.log(data);
-                                vm.lesson = data;
+                                vm.lessons = data;
                             });
                     })
-            
-            
-                  
-             
-             let store = new Vue({
-data: { lessons: {} },
-// this function runs when creating the Vue instance
-created: function() {
-// replace the URL to your Heroku app and route
-fetch('https://cw2-backend.herokuapp.com/collection/lesson').then(
-function (response) {
-response.json().then(
-function (json) {
-// note that we used 'store.product' instead of 'this.product'
-store.products = json;
-});
-})
-},
-})
 },
         })
 
