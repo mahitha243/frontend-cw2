@@ -22,8 +22,12 @@
             {{sitename}}
         </h3>
        </div>
-<a style="float: right;" href="#" class="btn btn-primary" v-if='cartItemCount === 0 '  hidden>Cart</a>
-    <a style="float: right;" href="#" class="btn btn-primary" @click="showCheckout()" v-else > <span class="fas fa-cart-plus"></span> Cart ({{cartItemCount}})</a>
+<button style="float: right;" class="btn btn-primary" v-if="cartItemCount === 0" hidden>
+    <i class="fa fa-shopping-cart"></i> Cart {{cartItemCount}}
+</button>
+    <button style="float: right;" class="btn btn-primary"  v-on:click="showCheckout()" v-else >
+         <i class="fa fa-shopping-cart"></i> Cart {{cartItemCount}}
+        </button>
     <!--search bar html-->
     <div class="col-md-6">
         <form>
@@ -81,7 +85,7 @@
                 <p> <b>Price : ${{lesson.price}}</b></p>
                 <p class="text-danger" v-if="lessons.availablespace === cartCount(lessons) "> Completely Booked</p>
                 <p class="text-success" v-else>Available Spaces : {{lesson.availablespace - cartCount(lesson)}}</p>
-                <button style="float: right;" href="#" class="btn btn-primary" v-on:click ='addLessonsToCart(lesson._id)' v-if='canAddToCart(lesson)' >Add To Cart</button>
+                <button style="float: right;" href="#" class="btn btn-primary" v-on:click='addLessonsToCart(lesson._id)' v-if='canAddToCart(lesson)' >Add To Cart</button>
                 <button hidden style="float: right;" href="#" class="btn btn-primary" v-else >Add To Cart</button>
                     <br>
                 </div>
@@ -97,17 +101,16 @@
         
     
     <br><br><br>
-
+   
         <div class="row" >
             <!--showing subject details in shopping cart page once the user adds it in cart -->
             <div  v-for="(lesson, index) in cart" class="col-md-4 mb-5">
             <div class="card " style="width: 18rem;border-bottom-width: 5px; border-bottom-color:purple;">
-                <img class="card-img" v-bind:src="`https://cw2-backend.herokuapp.com/collection/lesson/${fetchLesson(lesson._id).image}`" alt="Lesson Image">
+                <img class="card-img" v-bind:src="` https://cw2-backend.herokuapp.com/${fetchLesson(lesson.lessonID).image}`" alt="Lesson Image">
                 <div class="card-body">
-                <h5 class="card-title" >Title : {{fetchLesson(lesson._id).title}}</h5>
-                <p class="card-text" > Location : {{fetchLesson(lesson._id).location}} </p>
-                <p> <b>Price : ${{fetchLesson(lesson._id).price}}}</b></p>
-               
+                <h5 class="card-title" >Title : {{fetchLesson(lesson.lessonID).title}}</h5>
+                <p class="card-text" > Location : {{fetchLesson(lesson.lessonID).location}} </p>
+                <p> <b>Price : ${{fetchLesson(lesson.lessonID).price}}}</b></p>
                 <button style="float: right;" href="#" class="btn btn-primary" v-on:click ='deleteFromCart(index)' >Remove from Cart</button>
                 
                     <br>
@@ -160,24 +163,19 @@
                         this.addToCart(_id);
                     }
                 },
-           addToCart: function (id) {
-                    const itemIndex = this.cart.findIndex(item => item._id === id);
+                addToCart: function (lessonID) {
+                    const itemIndex = this.cart.findIndex(item => item.lessonID === lessonID);
                     if (itemIndex != -1) {
                         this.cart[itemIndex].availablespace += 1;
                     } else {
-                        this.cart.push({ id: id, availablespace: 1 });
+                        this.cart.push({ lessonID: lessonID, availablespace: 1 });
                     }
                 },
 
-                //shopping cart 
-                showCheckout: function(){
-                    console.log(this.showProd);
-                    this.showProd = this.showProd ? false : true;
-                },
 
             // Filtering through lessons object to give out search
              searchLessons: function(){
-                fetch("https://cw2-backend.herokuapp.com/collection/lesson/" + this.term).then(
+                fetch("https://cw2-backend.herokuapp.com/collection/lessons/" + this.term).then(
                         function (response) {
                             response.json().then(
                                 function (data) {
@@ -201,9 +199,12 @@
                 },
                 fetchLesson: function (_id) {
                     const lessonIndex = this.lessons.findIndex(lesson => lesson._id === _id);
+
                     if (lessonIndex == -1) {
+                        console.log(this.lessons[lessonIndex])
                         return;
                     }
+                    console.log(this.lessons[lessonIndex])
                     return this.lessons[lessonIndex];
                 },
                 //shopping cart 
@@ -271,7 +272,12 @@
 
         computed: {
                     cartItemCount: function(lessons){//returns lenthg of the cart
-                        return this.cart.length || '';
+                        let cartQuantity = 0;
+                    for (let index = 0; index < this.cart.length; index++) {
+                        cartQuantity += this.cart[index].availablespace;
+
+                    }
+                    return cartQuantity;
                     },
                     //the comparison that shows the order
                     sortedLessons(lessons, sort){
