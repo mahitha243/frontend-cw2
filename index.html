@@ -126,7 +126,7 @@
         <br>
         <form>
             <input class="form-control" style="width: 60%;" type="text" v-model="user.name" placeholder="Enter Your Name" required ><br>
-            <input class="form-control" style="width: 60%;" type="number" v-model="user.number" placeholder="Enter Your Phone Number" required><br>
+            <input class="form-control" style="width: 60%;" type="number" v-model="user.phone" placeholder="Enter Your Phone Number" required><br>
             <input style="margin-bottom: 50px;" @click="submitForm()" v-if="user.name == '' || user.number == '' " class="btn btn-primary" type="submit" value="Place Order" hidden>
             <p v-else-if="user.name == parseInt(user.name) " class="bg-danger"> Please input a valid name</p>
             <input style="margin-bottom: 50px;" @click="submitForm()" v-else class="btn btn-primary" type="submit" value="Place Order"> 
