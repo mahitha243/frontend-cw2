@@ -39,7 +39,7 @@
     <div v-if='showProd'>
    <br><br><br>
    <!--Start of sort by and sort order-->
-
+   <aside>
   <h4>SortBy</h4>
   <!--Title-->
   <div class="custom-sort" display="inline-block" >
@@ -62,7 +62,8 @@
   <label class="custom-sort-label" for="price">Availability</label>
   <br>  
   </div>
-
+</aside>
+<aside1>
   <h5>SortOrder</h5>
   <div class="sort">
   <input type="radio" id="ascending" name="sort_order" v-model="sort.sortingOrder" value="ascending">
@@ -72,7 +73,7 @@
   <input type="radio" id="descending" name="sort_order" v-model="sort.sortingOrder" value="descending">
   <label class="sort-label" for="descending">Descending</label><br>  
   </div>
-
+</aside1>
 <!--end of sort by  and sort order html-->
 
 <!--subject display vue -->
@@ -176,9 +177,9 @@
 
             // Filtering through lessons object to give out search
             searchLessons: function(){
-            	this.lessons = lessonsArray;
-	            this.lessons = this.lessons.filter(lesson => lesson.subject.toLowerCase().includes(this.term) == true || lesson.location.toLowerCase().includes(this.term));
-            },
+            this.lessons = lessonsArray;
+            this.lessons = this.lessons.filter(data => data.title.toLowerCase().includes(this.term) == true || data.location.toLowerCase().includes(this.term));
+             },
                 //delete subject from shopping cart
                 deleteFromCart: function(index) {
                     this.cart[index].availablespace = this.cart[index].availablespace - 1;
