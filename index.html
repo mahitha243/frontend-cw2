@@ -224,7 +224,7 @@
                         });
 
                     for (let index = 0; index < this.cart.length; index++) {
-                        const lesson = this.fetchLesson(this.cart[index]._id);
+                       const lesson = this.fetchLesson(this.cart[index].lessonID);
                         fetch(`https://cw2-backend.herokuapp.com/collection/lesson/${lesson._id}`, {
                             method: 'PUT', // set the HTTP method as 'POST'
                             headers: {
