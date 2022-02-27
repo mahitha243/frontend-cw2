@@ -113,6 +113,7 @@
                 <h5 class="card-title" >Title : {{fetchLesson(lesson.lessonID).title}}</h5>
                 <p class="card-text" > Location : {{fetchLesson(lesson.lessonID).location}} </p>
                 <p> <b>Price : ${{fetchLesson(lesson.lessonID).price}}}</b></p>
+               <h6>Quantity: {{lesson.availablespace}}</h6>
                 <button style="float: right;" href="#" class="btn btn-primary" v-on:click ='deleteFromCart(index)' >Remove from Cart</button>
                 
                     <br>
