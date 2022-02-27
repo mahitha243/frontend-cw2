@@ -178,7 +178,7 @@
 
             // Filtering through lessons object to give out search
             searchLessons: function(){
-            this.lessons = lessonsArray;
+            this.lessons = lessonsArray;    //gets the lessons array from lesson.js for search.
             this.lessons = this.lessons.filter(data => data.title.toLowerCase().includes(this.term) == true || data.location.toLowerCase().includes(this.term));
              },
                 //delete subject from shopping cart
