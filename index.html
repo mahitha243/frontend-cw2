@@ -110,7 +110,7 @@
             <div class="card " style="width: 18rem;border-bottom-width: 5px; border-bottom-color:purple;">
                 <img class="card-img" v-bind:src="` https://cw2-backend.herokuapp.com/${fetchLesson(lesson.lessonID).image}`" alt="Lesson Image">
                 <div class="card-body">
-                <h5 class="card-title" >Title : {{fetchLesson(lesson.lessonID).title}}</h5>         //fetch/data is coming from backend which is connected to mongodb
+                <h5 class="card-title" >Title : {{fetchLesson(lesson.lessonID).title}}</h5>         
                 <p class="card-text" > Location : {{fetchLesson(lesson.lessonID).location}} </p>
                 <p> <b>Price : ${{fetchLesson(lesson.lessonID).price}}</b></p>
                <h6>Quantity: {{lesson.availablespace}}</h6>
