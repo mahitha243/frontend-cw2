@@ -178,7 +178,7 @@
 
            // Filtering through lessons object to give out search
 searchLessons: function(){
-                fetch("https://cw2-backend.herokuapp.com/collection/lesson/" + this.term).then(
+                fetch("https://cw2-backend.herokuapp.com/collection/lesson" + this.term).then(
                         function (response) {
                             response.json().then(
                                 function (data) {
